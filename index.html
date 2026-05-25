@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Najat Aderdour — Data Science & IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070709;
+  --bg2: #0e0e14;
+  --bg3: #14141e;
+  --surface: #1c1c28;
+  --surface2: #22223200;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.11);
+  --border3: rgba(255,255,255,0.18);
+  --v: #8b5cf6;
+  --v2: #a78bfa;
+  --v3: #c4b5fd;
+  --g: #10b981;
+  --g2: #34d399;
+  --o: #f59e0b;
+  --o2: #fbbf24;
+  --p: #ec4899;
+  --b: #3b82f6;
+  --text: #f1f0fa;
+  --text2: #8e8da8;
+  --text3: #4a4966;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Outfit', system-ui, sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ── */
+#cursor{position:fixed;width:10px;height:10px;background:var(--v2);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,background 0.2s;mix-blend-mode:screen}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(167,139,250,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.18s ease;mix-blend-mode:normal}
+body:hover #cursor{opacity:1}
+
+/* ── NOISE TEXTURE ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;transition:all 0.3s}
+nav.scrolled{background:rgba(7,7,9,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--serif);font-size:1.3rem;color:var(--text);letter-spacing:-0.01em}
+.nav-logo b{color:var(--v2);font-weight:700}
+.nav-links{display:flex;gap:2.5rem}
+.nav-links a{font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);text-decoration:none;transition:color 0.2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--v2);transition:width 0.3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 1.6rem;background:var(--v);color:#fff;text-decoration:none;border-radius:100px;transition:all 0.2s;box-shadow:0 0 20px rgba(139,92,246,0.35)}
+.nav-cta:hover{background:var(--v2);box-shadow:0 0 30px rgba(167,139,250,0.5);transform:translateY(-1px)}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;align-items:center;padding:7rem 4rem 4rem;position:relative;overflow:hidden}
+.hero-layout{display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;position:relative;z-index:1;gap:0}
+.hero-right{display:none}
+.hero-orbs{position:absolute;inset:0;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:float 8s ease-in-out infinite}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%);top:-10%;right:-5%;animation-delay:0s}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(16,185,129,0.08),transparent 70%);bottom:5%;left:5%;animation-delay:-3s}
+.orb3{width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,0.07),transparent 70%);top:40%;left:30%;animation-delay:-5s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+.hero-grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);pointer-events:none}
+.hero-inner{position:relative;z-index:1;width:100%;max-width:780px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-logo-wrap{display:flex;align-items:center;justify-content:center;margin-bottom:2rem;opacity:0;animation:fadein 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s forwards}
+@keyframes fadein{to{opacity:1}}
+.logo-icon{flex-shrink:0;filter:drop-shadow(0 0 18px rgba(139,92,246,0.5));animation:logo-glow 3s ease-in-out infinite}
+@keyframes logo-glow{0%,100%{filter:drop-shadow(0 0 14px rgba(139,92,246,0.4))}50%{filter:drop-shadow(0 0 28px rgba(139,92,246,0.75))}}
+.logo-name-text{display:flex;flex-direction:column;line-height:1}
+.logo-first{font-family:var(--sans);font-size:clamp(2.2rem,5vw,4rem);font-weight:700;letter-spacing:0.05em;background:linear-gradient(135deg,#a78bfa,#3b82f6 60%,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-last{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.6rem);font-weight:700;font-style:italic;color:var(--text);letter-spacing:0.01em;margin-top:0.1rem}
+.hero-sub{font-size:clamp(1rem,1.8vw,1.25rem);font-weight:300;color:var(--text2);letter-spacing:0.04em;margin-bottom:1.5rem}
+.hero-sub span{color:var(--v3);font-weight:500}
+.hero-tagline{font-size:1rem;color:var(--text2);max-width:540px;line-height:1.8;margin-bottom:3rem;border-left:none;padding-left:0;text-align:center}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:4rem}
+.btn-main{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:linear-gradient(135deg,var(--v),var(--b));color:#fff;border-radius:100px;text-decoration:none;font-size:0.9rem;font-weight:600;letter-spacing:0.03em;transition:all 0.25s;box-shadow:0 4px 30px rgba(139,92,246,0.4)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(139,92,246,0.55)}
+.btn-outline{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;color:var(--text2);border-radius:100px;text-decoration:none;font-size:0.9rem;font-weight:500;border:1px solid var(--border2);transition:all 0.25s}
+.btn-outline:hover{color:var(--text);border-color:var(--border3);background:var(--surface)}
+.hero-metrics{display:flex;gap:0;border-top:1px solid var(--border)}
+.metric{padding:1.8rem 2.5rem 0 0;margin-right:2.5rem;border-right:1px solid var(--border);position:relative}
+.metric:last-child{border-right:none}
+.metric-num{font-family:var(--serif);font-size:2.8rem;font-weight:900;color:var(--text);line-height:1;letter-spacing:-0.03em}
+.metric-num sup{font-size:1.2rem;color:var(--v2);vertical-align:super}
+.metric-label{font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-top:0.3rem}
+.metric-accent{width:24px;height:2px;background:var(--v);margin-bottom:0.8rem;border-radius:1px}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;z-index:1}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--v2),transparent);animation:scrolldown 2s ease-in-out infinite}
+@keyframes scrolldown{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── SECTION BASE ── */
+.sec{padding:7rem 4rem;max-width:1200px;margin:0 auto}
+.sec-tag{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--v2);margin-bottom:1rem}
+.sec-tag::before{content:'';width:20px;height:1px;background:var(--v2)}
+.sec-title{font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.5rem);line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem;font-weight:900}
+.sec-title em{color:var(--v2);font-style:italic}
+.sec-desc{color:var(--text2);font-size:1rem;max-width:500px;line-height:1.75;margin-bottom:4rem}
+
+/* ── ABOUT ── */
+#about{background:linear-gradient(to bottom,transparent,rgba(139,92,246,0.03),transparent)}
+.about-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:start}
+.about-text p{color:var(--text2);line-height:1.9;margin-bottom:1.2rem;font-size:0.97rem}
+.about-text strong{color:var(--v3);font-weight:500}
+.contact-stack{margin-top:2.2rem;display:flex;flex-direction:column;gap:0.7rem}
+.clink{display:flex;align-items:center;gap:0.9rem;font-size:0.86rem;color:var(--text2);text-decoration:none;padding:0.65rem 0.9rem;border-radius:10px;border:1px solid transparent;transition:all 0.2s}
+.clink:hover{background:var(--bg3);border-color:var(--border2);color:var(--text)}
+.clink-icon{width:30px;height:30px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0}
+.clink a{color:var(--v2)}
+.edu-cards{display:flex;flex-direction:column;gap:1rem}
+.edu-item{padding:1.3rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:14px;position:relative;overflow:hidden;transition:all 0.25s}
+.edu-item::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,0.04),transparent);opacity:0;transition:opacity 0.3s}
+.edu-item:hover{border-color:var(--border2);transform:translateX(4px)}
+.edu-item:hover::before{opacity:1}
+.edu-strip{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px}
+.edu-deg{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.2rem;padding-left:0.2rem}
+.edu-school{font-size:0.8rem;color:var(--text2);padding-left:0.2rem}
+.edu-yr{font-size:0.72rem;font-weight:700;letter-spacing:0.06em;margin-top:0.35rem;padding-left:0.2rem}
+
+/* ── SKILLS ── */
+#skills{position:relative}
+#skills::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(to right,transparent,var(--border2),transparent)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.2rem}
+.sk-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.6rem;transition:all 0.3s;position:relative;overflow:hidden}
+.sk-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(139,92,246,0.08),transparent 60%);opacity:0;transition:opacity 0.3s;pointer-events:none}
+.sk-card:hover{border-color:rgba(139,92,246,0.3);transform:translateY(-3px)}
+.sk-card:hover::after{opacity:1}
+.sk-head{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.1rem}
+.sk-ico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.sk-name{font-size:0.9rem;font-weight:600;color:var(--text)}
+.sk-name small{display:block;font-size:0.74rem;color:var(--text3);font-weight:400;margin-top:0.1rem}
+.tags{display:flex;flex-wrap:wrap;gap:0.35rem}
+.t{font-size:0.7rem;font-weight:600;letter-spacing:0.04em;padding:0.28rem 0.7rem;border-radius:100px;border:1px solid}
+.tv{background:rgba(139,92,246,0.1);color:var(--v3);border-color:rgba(139,92,246,0.25)}
+.tg{background:rgba(16,185,129,0.08);color:var(--g2);border-color:rgba(16,185,129,0.2)}
+.to{background:rgba(245,158,11,0.08);color:var(--o2);border-color:rgba(245,158,11,0.2)}
+.tb{background:rgba(59,130,246,0.08);color:#93c5fd;border-color:rgba(59,130,246,0.2)}
+.tp{background:rgba(236,72,153,0.08);color:#f9a8d4;border-color:rgba(236,72,153,0.2)}
+.tn{background:rgba(255,255,255,0.04);color:var(--text2);border-color:var(--border2)}
+
+/* ── PROJECTS ── */
+#projects{background:linear-gradient(to bottom,transparent,rgba(16,185,129,0.02),transparent)}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.proj-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:1.8rem;transition:all 0.3s;cursor:pointer;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--card-a,var(--v)),var(--card-b,var(--b)));opacity:0;transition:opacity 0.3s}
+.proj-card:hover{border-color:var(--border2);transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.proj-card:hover::before{opacity:1}
+.proj-card.wide{grid-column:span 2}
+.proj-badge{font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.25rem 0.75rem;border-radius:100px;display:inline-block;margin-bottom:1rem;width:fit-content}
+.b-hack{background:rgba(245,158,11,0.12);color:var(--o2)}
+.b-acad{background:rgba(139,92,246,0.1);color:var(--v3)}
+.b-stage{background:rgba(16,185,129,0.08);color:var(--g2)}
+.b-mob{background:rgba(236,72,153,0.1);color:#f9a8d4}
+.b-web{background:rgba(59,130,246,0.08);color:#93c5fd}
+.proj-win{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.72rem;font-weight:700;color:var(--o2);background:rgba(245,158,11,0.08);padding:0.2rem 0.65rem;border-radius:100px;margin-bottom:0.6rem}
+.proj-title{font-family:var(--serif);font-size:1.2rem;line-height:1.25;color:var(--text);margin-bottom:0.65rem;font-weight:700}
+.wide .proj-title{font-size:1.5rem}
+.proj-desc{font-size:0.84rem;color:var(--text2);line-height:1.75;margin-bottom:1.2rem;flex:1}
+.proj-tech{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:1.3rem}
+.proj-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.proj-date{font-size:0.75rem;color:var(--text3)}
+.proj-arr{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--text2);transition:all 0.2s;flex-shrink:0}
+.proj-card:hover .proj-arr{background:var(--v);border-color:var(--v);color:#fff;transform:rotate(45deg)}
+
+/* ── EXPERIENCE ── */
+#experience{}
+.exp-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.tl{position:relative;padding-left:1.8rem}
+.tl::before{content:'';position:absolute;left:0;top:6px;bottom:0;width:1px;background:linear-gradient(to bottom,var(--v),rgba(139,92,246,0.1))}
+.tl-item{position:relative;margin-bottom:2.5rem}
+.tl-dot{position:absolute;left:-2.15rem;top:5px;width:9px;height:9px;border-radius:50%;background:var(--v);box-shadow:0 0 0 3px rgba(139,92,246,0.2),0 0 15px rgba(139,92,246,0.5)}
+.tl-date{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--v2);margin-bottom:0.35rem}
+.tl-role{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.1rem}
+.tl-co{font-size:0.84rem;color:var(--g2);font-weight:500;margin-bottom:0.5rem}
+.tl-desc{font-size:0.83rem;color:var(--text2);line-height:1.7}
+.side-block{display:flex;flex-direction:column;gap:2rem}
+.side-title{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:1rem}
+.lang-row{display:flex;gap:0.8rem}
+.lang-pill{padding:0.7rem 1.2rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;text-align:center;flex:1}
+.lang-n{font-size:0.88rem;font-weight:600;color:var(--text)}
+.lang-l{font-size:0.72rem;color:var(--text3);margin-top:0.15rem}
+.soft-list{display:flex;flex-direction:column;gap:0.65rem}
+.soft-item{display:flex;align-items:center;gap:0.75rem;font-size:0.87rem;color:var(--text2)}
+.soft-dot{width:6px;height:6px;border-radius:50%;background:var(--g2);flex-shrink:0}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(--bg)}
+.ft-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:2rem;margin-bottom:2rem}
+.ft-left{}
+.ft-name{font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--text);margin-bottom:0.2rem}
+.ft-sub{font-size:0.78rem;color:var(--text3);letter-spacing:0.04em}
+.ft-center{display:flex;flex-direction:column;align-items:center;gap:0.5rem}
+.ft-socials{display:flex;gap:0.7rem}
+.ft-social{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--text2);text-decoration:none;font-size:0.8rem;transition:all 0.2s}
+.ft-social:hover{border-color:var(--v2);color:var(--v2);background:rgba(139,92,246,0.08)}
+.ft-right{display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem}
+.ft-contact-link{font-size:0.83rem;color:var(--text2);text-decoration:none;transition:color 0.2s;display:flex;align-items:center;gap:0.4rem}
+.ft-contact-link:hover{color:var(--v2)}
+.ft-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;align-items:center;justify-content:center}
+.ft-copy{font-size:0.72rem;color:var(--text3)}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1),transform 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal.vis{opacity:1;transform:none}
+.reveal-l{opacity:0;transform:translateX(-32px);transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1),transform 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal-l.vis{opacity:1;transform:none}
+.d1{transition-delay:0.05s}.d2{transition-delay:0.12s}.d3{transition-delay:0.2s}.d4{transition-delay:0.28s}.d5{transition-delay:0.36s}.d6{transition-delay:0.44s}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(139,92,246,0.5)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  #hero,.sec{padding-left:1.5rem;padding-right:1.5rem}
+  .hero-layout{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .about-wrap,.exp-wrap{grid-template-columns:1fr;gap:2.5rem}
+  .proj-grid{grid-template-columns:1fr}
+  .proj-card.wide{grid-column:span 1}
+  footer{padding:2rem 1.5rem}
+  .ft-inner{grid-template-columns:1fr;gap:1.5rem}
+  .ft-right{align-items:flex-start}
+  .ft-center{align-items:flex-start}
+  .hero-metrics{flex-wrap:wrap;gap:0}
+  .metric{padding:1.5rem 1.5rem 0 0;margin-right:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">N<b>.</b>Aderdour</div>
+  <div class="nav-links">
+    <a href="#about">Profil</a>
+    <a href="#skills">Compétences</a>
+    <a href="#projects">Projets</a>
+    <a href="#experience">Expérience</a>
+  </div>
+  <a href="mailto:aderdour.najat1@gmail.com" class="nav-cta">Me contacter</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-layout">
+  <div class="hero-inner">
+    <!-- NAME BLOCK -->
+    <div class="hero-logo-wrap">
+      <div class="logo-name-text">
+        <span class="logo-first">ADERDOUR</span>
+        <span class="logo-last">Najat</span>
+      </div>
+    </div>
+    <p class="hero-sub" style="text-align:center">Étudiante Ingénieure — <span>ENSIASD Taroudant</span></p>
+    <p class="hero-tagline">Je construis des systèmes intelligents qui transforment la donnée en impact réel — de la détection d'anomalies aux agents IA agentiques.</p>
+    <div class="hero-actions" style="justify-content:center">
+      <a href="#projects" class="btn-main">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        Voir mes projets
+      </a>
+      <a href="https://github.com/adernajat" target="_blank" class="btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://linkedin.com/in/najat-aderdour-31124423a" target="_blank" class="btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+    <div class="hero-metrics" style="justify-content:center">
+      <div class="metric">
+        <div class="metric-accent"></div>
+        <div class="metric-num">7<sup>+</sup></div>
+        <div class="metric-label">Projets IA/Data</div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:var(--g)"></div>
+        <div class="metric-num">4<sup>+</sup></div>
+        <div class="metric-label">Stages Pro</div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:var(--o)"></div>
+        <div class="metric-num">1</div>
+        <div class="metric-label">Hackathon IA Agentique</div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:var(--p)"></div>
+        <div class="metric-num">3</div>
+        <div class="metric-label">Langues</div>
+      </div>
+    </div>
+  </div><!-- /hero-inner -->
+
+
+  </div><!-- /hero-layout --><div class="scroll-line"></div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <div class="reveal">
+    <span class="sec-tag">Qui suis-je</span>
+    <h2 class="sec-title">Ingénieure <em>Data & IA</em></h2>
+  </div>
+  <div class="about-wrap">
+    <div class="about-text reveal reveal-l d1">
+      <p>Passionnée par l'<strong>intelligence artificielle</strong> et les sciences des données, je suis actuellement en cycle ingénieur à l'<strong>ENSIASD de Taroudant</strong>, filière Sciences des Données, Big Data & IA (2024–2026).</p>
+      <p>Je suis motivée par les problèmes à fort impact, les hackathons, et la création de solutions qui allient <strong>robustesse technique</strong> et <strong>utilité réelle</strong>.</p>
+      <div class="contact-stack">
+        <div class="clink"><div class="clink-icon">📍</div>Casablanca, Maroc · +212 6 43 86 16 87</div>
+        <a href="mailto:aderdour.najat1@gmail.com" class="clink"><div class="clink-icon">✉️</div>aderdour.najat1@gmail.com</a>
+        <a href="https://github.com/adernajat" target="_blank" class="clink"><div class="clink-icon">⌥</div>github.com/adernajat</a>
+        <a href="https://linkedin.com/in/najat-aderdour-31124423a" target="_blank" class="clink"><div class="clink-icon">🔗</div>LinkedIn</a>
+      </div>
+    </div>
+    <div class="edu-cards reveal d2">
+      <div class="edu-item">
+        <div class="edu-strip" style="background:var(--v)"></div>
+        <div class="edu-deg">Cycle Ingénieur — Sciences des Données, Big Data & IA</div>
+        <div class="edu-school">ENSIASD, Taroudant</div>
+        <div class="edu-yr" style="color:var(--v2)">2024 – 2026</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-strip" style="background:var(--g)"></div>
+        <div class="edu-deg">Licence Pro — Ingénierie des Systèmes Informatiques et Logiciels</div>
+        <div class="edu-school">EST, Essaouira</div>
+        <div class="edu-yr" style="color:var(--g2)">2023 – 2024</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-strip" style="background:var(--o)"></div>
+        <div class="edu-deg">DUT — Génie Informatique</div>
+        <div class="edu-school">EST, Essaouira</div>
+        <div class="edu-yr" style="color:var(--o2)">2021 – 2023</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="sec">
+  <div class="reveal">
+    <span class="sec-tag">Expertise technique</span>
+    <h2 class="sec-title">Ce que je <em>maîtrise</em></h2>
+    <p class="sec-desc">Un éventail complet couvrant l'ensemble du pipeline Data & AI.</p>
+  </div>
+  <div class="skills-grid">
+    <div class="sk-card reveal d1">
+      <div class="sk-head">
+        <div class="sk-ico" style="background:rgba(139,92,246,0.12)">🤖</div>
+        <div class="sk-name">ML / IA / Vision<small>Intelligence artificielle & deep learning</small></div>
+      </div>
+      <div class="tags">
+        <span class="t tv">Scikit-learn</span><span class="t tv">TensorFlow</span><span class="t tv">PyTorch</span><span class="t tv">OpenCV</span><span class="t tv">Deep Learning</span><span class="t tv">Computer Vision</span>
+      </div>
+    </div>
+    <div class="sk-card reveal d2">
+      <div class="sk-head">
+        <div class="sk-ico" style="background:rgba(16,185,129,0.1)">🐍</div>
+        <div class="sk-name">Langages<small>Programmation & scripting</small></div>
+      </div>
+      <div class="tags">
+        <span class="t tg">Python</span><span class="t tg">Java</span><span class="t tg">C / C++</span><span class="t tg">SQL</span><span class="t tg">JavaScript</span>
+      </div>
+    </div>
+    <div class="sk-card reveal d3">
+      <div class="sk-head">
+        <div class="sk-ico" style="background:rgba(245,158,11,0.1)">📊</div>
+        <div class="sk-name">BI & Décisionnel<small>Analyse & visualisation</small></div>
+      </div>
+      <div class="tags">
+        <span class="t to">Power BI</span><span class="t to">OLAP</span><span class="t to">Modélisation multi-dim.</span><span class="t to">Systèmes décisionnels</span>
+      </div>
+    </div>
+    <div class="sk-card reveal d4">
+      <div class="sk-head">
+        <div class="sk-ico" style="background:rgba(59,130,246,0.1)">☁️</div>
+        <div class="sk-name">Big Data & Cloud<small>Infrastructure & traitement massif</small></div>
+      </div>
+      <div class="tags">
+        <span class="t tb">Hadoop</span><span class="t tb">HDFS</span><span class="t tb">YARN</span><span class="t tb">MapReduce</span><span class="t tb">AWS (EC2, S3, Lambda)</span><span class="t tb">IoT</span>
+      </div>
+    </div>
+    <div class="sk-card reveal d5">
+      <div class="sk-head">
+        <div class="sk-ico" style="background:rgba(236,72,153,0.1)">📱</div>
+        <div class="sk-name">Web & Mobile<small>Développement full-stack</small></div>
+      </div>
+      <div class="tags">
+        <span class="t tp">Flask</span><span class="t tp">Laravel</span><span class="t tp">HTML5/CSS3</span><span class="t tp">Flutter/Dart</span><span class="t tp">Android (Java)</span><span class="t tp">API REST</span>
+      </div>
+    </div>
+    <div class="sk-card reveal d6">
+      <div class="sk-head">
+        <div class="sk-ico" style="background:rgba(255,255,255,0.05)">🗄️</div>
+        <div class="sk-name">BDD & Outils<small>Gestion des données & workflows</small></div>
+      </div>
+      <div class="tags">
+        <span class="t tn">MySQL</span><span class="t tn">MongoDB</span><span class="t tn">SQL Server</span><span class="t tn">Git / GitHub</span><span class="t tn">Postman</span><span class="t tn">VS Code</span><span class="t tn">UML / Merise</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="sec">
+  <div class="reveal">
+    <span class="sec-tag">Réalisations</span>
+    <h2 class="sec-title">Projets <em>sélectionnés</em></h2>
+    <p class="sec-desc">Académiques, professionnels et hackathon — des solutions à fort impact.</p>
+  </div>
+  <div class="proj-grid">
+
+    <!-- StockIA WIDE -->
+    <div class="proj-card wide reveal d1" style="--card-a:#f59e0b;--card-b:#f97316">
+      <div>
+        <span class="proj-badge b-hack">🏆 Hackathon IA Agentique</span>
+        <div class="proj-win">🥉 3ème place — Avril 2026</div>
+      </div>
+      <h3 class="proj-title">StockIA — Système d'agents IA pour la gestion de stocks</h3>
+      <p class="proj-desc">Développé lors du "The 24 Build-Off IA Agentique" avec l'Équipe Innovia. Système multi-agents pour l'automatisation intelligente de la gestion de stocks : prédiction de rupture, réapprovisionnement automatique, tableau de bord temps réel et interface pilotée par LLM.</p>
+      <div class="proj-tech">
+        <span class="t to">Python</span><span class="t to">LLM</span><span class="t to">Agents IA</span><span class="t to">API REST</span><span class="t to">Dashboard</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">Avril 2026 · Équipe Innovia</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+    <!-- Image Captioning -->
+    <div class="proj-card reveal d2" style="--card-a:#8b5cf6;--card-b:#3b82f6">
+      <span class="proj-badge b-acad">Deep Learning</span>
+      <h3 class="proj-title">Image Captioning CNN + LSTM & Transformer</h3>
+      <p class="proj-desc">Génération automatique de légendes d'images sur Flickr8k. Architecture ResNet-50 + LSTM / Transformer.</p>
+      <div class="proj-tech">
+        <span class="t tv">PyTorch</span><span class="t tv">ResNet-50</span><span class="t tv">LSTM</span><span class="t tv">Transformer</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">2026 · ENSIASD</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+    <!-- Détection eau -->
+    <div class="proj-card reveal d3" style="--card-a:#10b981;--card-b:#06b6d4">
+      <span class="proj-badge b-acad">Machine Learning</span>
+      <h3 class="proj-title">Détection d'anomalies — Qualité de l'eau</h3>
+      <p class="proj-desc">Détection non supervisée (Isolation Forest, LOF, One-Class SVM) et supervisée (XGBoost, Random Forest) avec SMOTE.</p>
+      <div class="proj-tech">
+        <span class="t tg">Scikit-learn</span><span class="t tg">XGBoost</span><span class="t tg">SMOTE</span><span class="t tg">Gradio</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">2024–2025 · ENSIASD</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+    <!-- Dashboard BI WIDE -->
+    <div class="proj-card wide reveal d4" style="--card-a:#10b981;--card-b:#3b82f6">
+      <span class="proj-badge b-stage">Stage Pro · Juil–Août 2025</span>
+      <h3 class="proj-title">Dashboard BI & Module OCR Avancé — UNICASPORT</h3>
+      <p class="proj-desc">Application web intégrée : tableau de bord Business Intelligence avec KPI interactifs depuis Excel, couplé à un module OCR pour l'extraction automatique de texte et de tableaux depuis PDF et images.</p>
+      <div class="proj-tech">
+        <span class="t tg">Power BI</span><span class="t tg">OCR</span><span class="t tg">Python</span><span class="t tg">Excel / KPI</span><span class="t tg">API REST</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">UNICASPORT, Casablanca</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+    <!-- Lunettes IA -->
+    <div class="proj-card reveal d5" style="--card-a:#a78bfa;--card-b:#ec4899">
+      <span class="proj-badge b-acad">Vision par ordinateur</span>
+      <h3 class="proj-title">Essai Virtuel de Lunettes avec IA</h3>
+      <p class="proj-desc">Détection faciale temps réel pour l'essai virtuel de lunettes avec localisation des points clés du visage.</p>
+      <div class="proj-tech">
+        <span class="t tv">OpenCV</span><span class="t tv">TensorFlow</span><span class="t tv">JavaFX</span><span class="t tv">Java</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">2024–2025 · ENSIASD</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+    <!-- SafeNow -->
+    <div class="proj-card reveal d6" style="--card-a:#ec4899;--card-b:#f43f5e">
+      <span class="proj-badge b-mob">Android</span>
+      <h3 class="proj-title">SafeNow — App SOS d'urgence</h3>
+      <p class="proj-desc">Application Android native SOS avec envoi GPS automatique, gestion de contacts d'urgence et notifications SMS intelligentes.</p>
+      <div class="proj-tech">
+        <span class="t tp">Java</span><span class="t tp">SQLite</span><span class="t tp">Room</span><span class="t tp">GPS API</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">2025–2026 · ENSIASD</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+    <!-- Plateforme portfolios -->
+    <div class="proj-card reveal d1" style="--card-a:#3b82f6;--card-b:#6366f1">
+      <span class="proj-badge b-web">Stage Pro · 2024</span>
+      <h3 class="proj-title">Plateforme de Création de Portfolios & CVs</h3>
+      <p class="proj-desc">Site web complet dédié à la création de portfolios, CVs et cartes de visite numériques. Stage de fin d'études à WEBEX Agency.</p>
+      <div class="proj-tech">
+        <span class="t tb">Laravel</span><span class="t tb">HTML5/CSS3</span><span class="t tb">JavaScript</span><span class="t tb">MySQL</span>
+      </div>
+      <div class="proj-foot">
+        <span class="proj-date">2024 · WEBEXAG, Casablanca</span>
+        <div class="proj-arr">→</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="sec">
+  <div class="reveal">
+    <span class="sec-tag">Parcours professionnel</span>
+    <h2 class="sec-title">Expériences & <em>Stages</em></h2>
+  </div>
+  <div class="exp-wrap">
+    <div class="tl reveal d1">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Juillet – Août 2025</div>
+        <div class="tl-role">Développement Web BI & OCR</div>
+        <div class="tl-co">UNICASPORT, Casablanca</div>
+        <div class="tl-desc">Application web intégrée combinant dashboard BI et module OCR avancé. Analyse automatique de données Excel (KPI) et extraction depuis PDF/images.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--g);box-shadow:0 0 0 3px rgba(16,185,129,0.2),0 0 12px rgba(16,185,129,0.4)"></div>
+        <div class="tl-date">2024</div>
+        <div class="tl-role">Développement Web</div>
+        <div class="tl-co">WEBEXAG, Casablanca</div>
+        <div class="tl-desc">Plateforme de création de portfolios, CVs et cartes de visite (Laravel, HTML/CSS).</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--o);box-shadow:0 0 0 3px rgba(245,158,11,0.2),0 0 12px rgba(245,158,11,0.4)"></div>
+        <div class="tl-date">2023</div>
+        <div class="tl-role">Développement Mobile</div>
+        <div class="tl-co">DÉVELOPPEUR INFORMATIQUE.MA, Agadir</div>
+        <div class="tl-desc">Application mobile cross-platform responsive avec Flutter/Dart.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--p);box-shadow:0 0 0 3px rgba(236,72,153,0.2),0 0 12px rgba(236,72,153,0.4)"></div>
+        <div class="tl-date">2022</div>
+        <div class="tl-role">Application Android</div>
+        <div class="tl-co">SUPTECHNIQUE S.A.R.L, Agadir</div>
+        <div class="tl-desc">Application mobile Android native en Java avec base de données MySQL.</div>
+      </div>
+    </div>
+    <div class="side-block reveal d2">
+      <div>
+        <div class="side-title">Langues</div>
+        <div class="lang-row">
+          <div class="lang-pill"><div class="lang-n">Arabe</div><div class="lang-l">Maternelle</div></div>
+          <div class="lang-pill"><div class="lang-n">Français</div><div class="lang-l">Bon niveau</div></div>
+          <div class="lang-pill"><div class="lang-n">Anglais</div><div class="lang-l">Intermédiaire</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="side-title">Atouts clés</div>
+        <div class="soft-list">
+          <div class="soft-item"><div class="soft-dot"></div>Projets menés de bout en bout</div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--v2)"></div>Esprit analytique, orienté résultats</div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--o2)"></div>Travail en équipe (Hackathon)</div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--p)"></div>Veille IA / LLM active</div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--b)"></div>Adaptabilité rapide</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-left">
+      <div class="ft-name">Aderdour Najat</div>
+      <div class="ft-sub">Data Science · Big Data · Intelligence Artificielle</div>
+    </div>
+    <div class="ft-center">
+      <div class="ft-socials">
+        <a href="https://github.com/adernajat" target="_blank" class="ft-social" title="GitHub">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/najat-aderdour-31124423a" target="_blank" class="ft-social" title="LinkedIn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="mailto:aderdour.najat1@gmail.com" class="ft-social" title="Email">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="ft-right">
+      <a href="mailto:aderdour.najat1@gmail.com" class="ft-contact-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+        aderdour.najat1@gmail.com
+      </a>
+      <a href="tel:+212643861687" class="ft-contact-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +212 6 43 86 16 87
+      </a>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">© 2026 Aderdour Najat · Portfolio personnel</div>
+  </div>
+</footer>
+
+<script>
+// Custom cursor
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.proj-card,.sk-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.transform='translate(-50%,-50%) scale(2)';
+    ring.style.transform='translate(-50%,-50%) scale(1.5)';
+    ring.style.borderColor='rgba(167,139,250,0.6)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.transform='translate(-50%,-50%) scale(1)';
+    ring.style.transform='translate(-50%,-50%) scale(1)';
+    ring.style.borderColor='rgba(167,139,250,0.4)';
+  });
+});
+
+// Skill card mouse glow
+document.querySelectorAll('.sk-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+});
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal,.reveal-l').forEach(el=>obs.observe(el));
+
+// Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// Nav active
+const secs=document.querySelectorAll('section[id]');
+const nls=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-180)cur=s.id;});
+  nls.forEach(a=>{
+    const active=a.getAttribute('href')==='#'+cur;
+    a.style.color=active?'var(--text2)':'';
+    a.querySelector('::after');
+  });
+});
+</script>
+</body>
+</html>
