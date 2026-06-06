@@ -55,6 +55,28 @@ nav.scrolled{background:rgba(7,7,9,0.92);backdrop-filter:blur(20px);border-botto
 .nav-cta{font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 1.6rem;background:var(--v);color:#fff;text-decoration:none;border-radius:100px;transition:all 0.2s;box-shadow:0 0 20px rgba(139,92,246,0.35)}
 .nav-cta:hover{background:var(--v2);box-shadow:0 0 30px rgba(167,139,250,0.5);transform:translateY(-1px)}
 
+/* ── LANG SWITCH ── */
+.nav-right{display:flex;align-items:center;gap:1rem}
+.lang-switch{display:flex;align-items:center;gap:0;background:var(--bg3);border:1px solid var(--border2);border-radius:100px;padding:3px;cursor:pointer}
+.lang-btn{font-size:0.72rem;font-weight:700;letter-spacing:0.08em;padding:0.35rem 0.85rem;border-radius:100px;border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all 0.2s;font-family:var(--sans)}
+.lang-btn.active{background:var(--v);color:#fff;box-shadow:0 0 12px rgba(139,92,246,0.4)}
+.lang-btn:hover:not(.active){color:var(--text2)}
+
+/* ── CV MODAL ── */
+#cv-modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:2rem}
+#cv-modal.open{display:flex}
+.cv-backdrop{position:absolute;inset:0;background:rgba(7,7,9,0.85);backdrop-filter:blur(12px)}
+.cv-box{position:relative;z-index:1;background:var(--bg2);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:860px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.6),0 0 0 1px rgba(139,92,246,0.15)}
+.cv-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;border-bottom:1px solid var(--border)}
+.cv-title{font-size:0.85rem;font-weight:600;color:var(--text2);letter-spacing:0.06em;text-transform:uppercase}
+.cv-actions{display:flex;align-items:center;gap:0.6rem}
+.cv-dl{display:inline-flex;align-items:center;gap:0.45rem;font-size:0.78rem;font-weight:600;padding:0.45rem 1.1rem;background:var(--v);color:#fff;border-radius:100px;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;font-family:var(--sans)}
+.cv-dl:hover{background:var(--v2);transform:translateY(-1px)}
+.cv-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.2s;font-family:var(--sans)}
+.cv-close:hover{background:var(--bg3);color:var(--text);border-color:var(--border3)}
+.cv-embed{flex:1;overflow:hidden}
+.cv-embed iframe{width:100%;height:100%;min-height:70vh;border:none;display:block}
+
 /* ── HERO ── */
 #hero{min-height:100vh;display:flex;align-items:center;padding:7rem 4rem 4rem;position:relative;overflow:hidden}
 .hero-layout{display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;position:relative;z-index:1;gap:0}
@@ -82,6 +104,8 @@ nav.scrolled{background:rgba(7,7,9,0.92);backdrop-filter:blur(20px);border-botto
 .btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(139,92,246,0.55)}
 .btn-outline{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;color:var(--text2);border-radius:100px;text-decoration:none;font-size:0.9rem;font-weight:500;border:1px solid var(--border2);transition:all 0.25s}
 .btn-outline:hover{color:var(--text);border-color:var(--border3);background:var(--surface)}
+.btn-cv{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;color:var(--v3);border-radius:100px;text-decoration:none;font-size:0.9rem;font-weight:600;border:1px solid rgba(139,92,246,0.4);transition:all 0.25s;cursor:pointer;font-family:var(--sans)}
+.btn-cv:hover{color:#fff;border-color:var(--v);background:rgba(139,92,246,0.15);box-shadow:0 0 24px rgba(139,92,246,0.25)}
 .hero-metrics{display:flex;gap:0;border-top:1px solid var(--border)}
 .metric{padding:1.8rem 2.5rem 0 0;margin-right:2.5rem;border-right:1px solid var(--border);position:relative}
 .metric:last-child{border-right:none}
@@ -234,6 +258,8 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
   .ft-center{align-items:flex-start}
   .hero-metrics{flex-wrap:wrap;gap:0}
   .metric{padding:1.5rem 1.5rem 0 0;margin-right:1.5rem}
+  .nav-right{gap:0.5rem}
+  .lang-btn{padding:0.3rem 0.6rem}
 }
 </style>
 </head>
@@ -242,16 +268,42 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
+<!-- CV MODAL -->
+<div id="cv-modal">
+  <div class="cv-backdrop" id="cv-backdrop"></div>
+  <div class="cv-box">
+    <div class="cv-header">
+      <span class="cv-title" id="cv-modal-title">Curriculum Vitae</span>
+      <div class="cv-actions">
+        <a href="CV_Aderdour_Najat.pdf" download class="cv-dl" id="cv-dl-btn">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span id="cv-dl-label">Télécharger</span>
+        </a>
+        <button class="cv-close" id="cv-close-btn" aria-label="Fermer">✕</button>
+      </div>
+    </div>
+    <div class="cv-embed">
+      <iframe src="CV_Aderdour_Najat.pdf" title="CV Najat Aderdour"></iframe>
+    </div>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-logo">N<b>.</b>Aderdour</div>
   <div class="nav-links">
-    <a href="#about">Profil</a>
-    <a href="#skills">Compétences</a>
-    <a href="#projects">Projets</a>
-    <a href="#experience">Expérience</a>
+    <a href="#about" data-fr="Profil" data-en="Profile">Profil</a>
+    <a href="#skills" data-fr="Compétences" data-en="Skills">Compétences</a>
+    <a href="#projects" data-fr="Projets" data-en="Projects">Projets</a>
+    <a href="#experience" data-fr="Expérience" data-en="Experience">Expérience</a>
   </div>
-  <a href="mailto:aderdour.najat1@gmail.com" class="nav-cta">Me contacter</a>
+  <div class="nav-right">
+    <div class="lang-switch" id="lang-switch" aria-label="Changer de langue">
+      <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="mailto:aderdour.najat1@gmail.com" class="nav-cta" id="nav-cta-contact">Me contacter</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -271,13 +323,17 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
         <span class="logo-last">Najat</span>
       </div>
     </div>
-    <p class="hero-sub" style="text-align:center">Étudiante Ingénieure — <span>ENSIASD Taroudant</span></p>
-    <p class="hero-tagline">Je construis des systèmes intelligents qui transforment la donnée en impact réel — de la détection d'anomalies aux agents IA agentiques.</p>
+    <p class="hero-sub" style="text-align:center" id="hero-sub">Étudiante Ingénieure — <span>ENSIASD Taroudant</span></p>
+    <p class="hero-tagline" id="hero-tagline">Je construis des systèmes intelligents qui transforment la donnée en impact réel — de la détection d'anomalies aux agents IA agentiques.</p>
     <div class="hero-actions" style="justify-content:center">
-      <a href="#projects" class="btn-main">
+      <a href="#projects" class="btn-main" id="btn-projects">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-        Voir mes projets
+        <span id="btn-projects-label">Voir mes projets</span>
       </a>
+      <button class="btn-cv" id="btn-open-cv" onclick="openCvModal()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span id="btn-cv-label">Voir mon CV</span>
+      </button>
       <a href="https://github.com/adernajat" target="_blank" class="btn-outline">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
@@ -291,40 +347,38 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
       <div class="metric">
         <div class="metric-accent"></div>
         <div class="metric-num">7<sup>+</sup></div>
-        <div class="metric-label">Projets IA/Data</div>
+        <div class="metric-label" id="metric1">Projets IA/Data</div>
       </div>
       <div class="metric">
         <div class="metric-accent" style="background:var(--g)"></div>
         <div class="metric-num">4<sup>+</sup></div>
-        <div class="metric-label">Stages Pro</div>
+        <div class="metric-label" id="metric2">Stages Pro</div>
       </div>
       <div class="metric">
         <div class="metric-accent" style="background:var(--o)"></div>
         <div class="metric-num">1</div>
-        <div class="metric-label">Hackathon IA Agentique</div>
+        <div class="metric-label" id="metric3">Hackathon IA Agentique</div>
       </div>
       <div class="metric">
         <div class="metric-accent" style="background:var(--p)"></div>
         <div class="metric-num">3</div>
-        <div class="metric-label">Langues</div>
+        <div class="metric-label" id="metric4">Langues</div>
       </div>
     </div>
   </div><!-- /hero-inner -->
-
-
   </div><!-- /hero-layout --><div class="scroll-line"></div></div>
 </section>
 
 <!-- ABOUT -->
 <section id="about" class="sec">
   <div class="reveal">
-    <span class="sec-tag">Qui suis-je</span>
-    <h2 class="sec-title">Ingénieure <em>Data & IA</em></h2>
+    <span class="sec-tag" id="about-tag">Qui suis-je</span>
+    <h2 class="sec-title" id="about-title">Ingénieure <em>Data & IA</em></h2>
   </div>
   <div class="about-wrap">
     <div class="about-text reveal reveal-l d1">
-      <p>Passionnée par l'<strong>intelligence artificielle</strong> et les sciences des données, je suis actuellement en cycle ingénieur à l'<strong>ENSIASD de Taroudant</strong>, filière Sciences des Données, Big Data & IA (2024–2026).</p>
-      <p>Je suis motivée par les problèmes à fort impact, les hackathons, et la création de solutions qui allient <strong>robustesse technique</strong> et <strong>utilité réelle</strong>.</p>
+      <p id="about-p1">Passionnée par l'<strong>intelligence artificielle</strong> et les sciences des données, je suis actuellement en cycle ingénieur à l'<strong>ENSIASD de Taroudant</strong>, filière Sciences des Données, Big Data & IA (2024–2026).</p>
+      <p id="about-p2">Je suis motivée par les problèmes à fort impact, les hackathons, et la création de solutions qui allient <strong>robustesse technique</strong> et <strong>utilité réelle</strong>.</p>
       <div class="contact-stack">
         <div class="clink"><div class="clink-icon">📍</div>Casablanca, Maroc · +212 6 43 86 16 87</div>
         <a href="mailto:aderdour.najat1@gmail.com" class="clink"><div class="clink-icon">✉️</div>aderdour.najat1@gmail.com</a>
@@ -335,19 +389,19 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     <div class="edu-cards reveal d2">
       <div class="edu-item">
         <div class="edu-strip" style="background:var(--v)"></div>
-        <div class="edu-deg">Cycle Ingénieur — Sciences des Données, Big Data & IA</div>
+        <div class="edu-deg" id="edu1-deg">Cycle Ingénieur — Sciences des Données, Big Data & IA</div>
         <div class="edu-school">ENSIASD, Taroudant</div>
         <div class="edu-yr" style="color:var(--v2)">2024 – 2026</div>
       </div>
       <div class="edu-item">
         <div class="edu-strip" style="background:var(--g)"></div>
-        <div class="edu-deg">Licence Pro — Ingénierie des Systèmes Informatiques et Logiciels</div>
+        <div class="edu-deg" id="edu2-deg">Licence Pro — Ingénierie des Systèmes Informatiques et Logiciels</div>
         <div class="edu-school">EST, Essaouira</div>
         <div class="edu-yr" style="color:var(--g2)">2023 – 2024</div>
       </div>
       <div class="edu-item">
         <div class="edu-strip" style="background:var(--o)"></div>
-        <div class="edu-deg">DUT — Génie Informatique</div>
+        <div class="edu-deg" id="edu3-deg">DUT — Génie Informatique</div>
         <div class="edu-school">EST, Essaouira</div>
         <div class="edu-yr" style="color:var(--o2)">2021 – 2023</div>
       </div>
@@ -358,15 +412,15 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
 <!-- SKILLS -->
 <section id="skills" class="sec">
   <div class="reveal">
-    <span class="sec-tag">Expertise technique</span>
-    <h2 class="sec-title">Ce que je <em>maîtrise</em></h2>
-    <p class="sec-desc">Un éventail complet couvrant l'ensemble du pipeline Data & AI.</p>
+    <span class="sec-tag" id="skills-tag">Expertise technique</span>
+    <h2 class="sec-title" id="skills-title">Ce que je <em>maîtrise</em></h2>
+    <p class="sec-desc" id="skills-desc">Un éventail complet couvrant l'ensemble du pipeline Data & AI.</p>
   </div>
   <div class="skills-grid">
     <div class="sk-card reveal d1">
       <div class="sk-head">
         <div class="sk-ico" style="background:rgba(139,92,246,0.12)">🤖</div>
-        <div class="sk-name">ML / IA / Vision<small>Intelligence artificielle & deep learning</small></div>
+        <div class="sk-name">ML / IA / Vision<small id="sk1-small">Intelligence artificielle & deep learning</small></div>
       </div>
       <div class="tags">
         <span class="t tv">Scikit-learn</span><span class="t tv">TensorFlow</span><span class="t tv">PyTorch</span><span class="t tv">OpenCV</span><span class="t tv">Deep Learning</span><span class="t tv">Computer Vision</span>
@@ -375,7 +429,7 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     <div class="sk-card reveal d2">
       <div class="sk-head">
         <div class="sk-ico" style="background:rgba(16,185,129,0.1)">🐍</div>
-        <div class="sk-name">Langages<small>Programmation & scripting</small></div>
+        <div class="sk-name" id="sk2-name">Langages<small id="sk2-small">Programmation & scripting</small></div>
       </div>
       <div class="tags">
         <span class="t tg">Python</span><span class="t tg">Java</span><span class="t tg">C / C++</span><span class="t tg">SQL</span><span class="t tg">JavaScript</span>
@@ -384,7 +438,7 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     <div class="sk-card reveal d3">
       <div class="sk-head">
         <div class="sk-ico" style="background:rgba(245,158,11,0.1)">📊</div>
-        <div class="sk-name">BI & Décisionnel<small>Analyse & visualisation</small></div>
+        <div class="sk-name">BI & Décisionnel<small id="sk3-small">Analyse & visualisation</small></div>
       </div>
       <div class="tags">
         <span class="t to">Power BI</span><span class="t to">OLAP</span><span class="t to">Modélisation multi-dim.</span><span class="t to">Systèmes décisionnels</span>
@@ -393,7 +447,7 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     <div class="sk-card reveal d4">
       <div class="sk-head">
         <div class="sk-ico" style="background:rgba(59,130,246,0.1)">☁️</div>
-        <div class="sk-name">Big Data & Cloud<small>Infrastructure & traitement massif</small></div>
+        <div class="sk-name">Big Data & Cloud<small id="sk4-small">Infrastructure & traitement massif</small></div>
       </div>
       <div class="tags">
         <span class="t tb">Hadoop</span><span class="t tb">HDFS</span><span class="t tb">YARN</span><span class="t tb">MapReduce</span><span class="t tb">AWS (EC2, S3, Lambda)</span><span class="t tb">IoT</span>
@@ -402,7 +456,7 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     <div class="sk-card reveal d5">
       <div class="sk-head">
         <div class="sk-ico" style="background:rgba(236,72,153,0.1)">📱</div>
-        <div class="sk-name">Web & Mobile<small>Développement full-stack</small></div>
+        <div class="sk-name">Web & Mobile<small id="sk5-small">Développement full-stack</small></div>
       </div>
       <div class="tags">
         <span class="t tp">Flask</span><span class="t tp">Laravel</span><span class="t tp">HTML5/CSS3</span><span class="t tp">Flutter/Dart</span><span class="t tp">Android (Java)</span><span class="t tp">API REST</span>
@@ -411,7 +465,7 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     <div class="sk-card reveal d6">
       <div class="sk-head">
         <div class="sk-ico" style="background:rgba(255,255,255,0.05)">🗄️</div>
-        <div class="sk-name">BDD & Outils<small>Gestion des données & workflows</small></div>
+        <div class="sk-name">BDD & Outils<small id="sk6-small">Gestion des données & workflows</small></div>
       </div>
       <div class="tags">
         <span class="t tn">MySQL</span><span class="t tn">MongoDB</span><span class="t tn">SQL Server</span><span class="t tn">Git / GitHub</span><span class="t tn">Postman</span><span class="t tn">VS Code</span><span class="t tn">UML / Merise</span>
@@ -423,34 +477,32 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
 <!-- PROJECTS -->
 <section id="projects" class="sec">
   <div class="reveal">
-    <span class="sec-tag">Réalisations</span>
-    <h2 class="sec-title">Projets <em>sélectionnés</em></h2>
-    <p class="sec-desc">Académiques, professionnels et hackathon — des solutions à fort impact.</p>
+    <span class="sec-tag" id="projects-tag">Réalisations</span>
+    <h2 class="sec-title" id="projects-title">Projets <em>sélectionnés</em></h2>
+    <p class="sec-desc" id="projects-desc">Académiques, professionnels et hackathon — des solutions à fort impact.</p>
   </div>
   <div class="proj-grid">
 
-    <!-- StockIA WIDE -->
     <div class="proj-card wide reveal d1" style="--card-a:#f59e0b;--card-b:#f97316">
       <div>
-        <span class="proj-badge b-hack">🏆 Hackathon IA Agentique</span>
-        <div class="proj-win">🥉 3ème place — Avril 2026</div>
+        <span class="proj-badge b-hack" id="p1-badge">🏆 Hackathon IA Agentique</span>
+        <div class="proj-win" id="p1-win">🥉 3ème place — Avril 2026</div>
       </div>
-      <h3 class="proj-title">StockIA — Système d'agents IA pour la gestion de stocks</h3>
-      <p class="proj-desc">Développé lors du "The 24 Build-Off IA Agentique" avec l'Équipe Innovia. Système multi-agents pour l'automatisation intelligente de la gestion de stocks : prédiction de rupture, réapprovisionnement automatique, tableau de bord temps réel et interface pilotée par LLM.</p>
+      <h3 class="proj-title">StockIA — <span id="p1-title-sub">Système d'agents IA pour la gestion de stocks</span></h3>
+      <p class="proj-desc" id="p1-desc">Développé lors du "The 24 Build-Off IA Agentique" avec l'Équipe Innovia. Système multi-agents pour l'automatisation intelligente de la gestion de stocks : prédiction de rupture, réapprovisionnement automatique, tableau de bord temps réel et interface pilotée par LLM.</p>
       <div class="proj-tech">
         <span class="t to">Python</span><span class="t to">LLM</span><span class="t to">Agents IA</span><span class="t to">API REST</span><span class="t to">Dashboard</span>
       </div>
       <div class="proj-foot">
-        <span class="proj-date">Avril 2026 · Équipe Innovia</span>
+        <span class="proj-date" id="p1-date">Avril 2026 · Équipe Innovia</span>
         <div class="proj-arr">→</div>
       </div>
     </div>
 
-    <!-- Image Captioning -->
     <div class="proj-card reveal d2" style="--card-a:#8b5cf6;--card-b:#3b82f6">
       <span class="proj-badge b-acad">Deep Learning</span>
-      <h3 class="proj-title">Image Captioning CNN + LSTM & Transformer</h3>
-      <p class="proj-desc">Génération automatique de légendes d'images sur Flickr8k. Architecture ResNet-50 + LSTM / Transformer.</p>
+      <h3 class="proj-title" id="p2-title">Image Captioning CNN + LSTM & Transformer</h3>
+      <p class="proj-desc" id="p2-desc">Génération automatique de légendes d'images sur Flickr8k. Architecture ResNet-50 + LSTM / Transformer.</p>
       <div class="proj-tech">
         <span class="t tv">PyTorch</span><span class="t tv">ResNet-50</span><span class="t tv">LSTM</span><span class="t tv">Transformer</span>
       </div>
@@ -460,11 +512,10 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
       </div>
     </div>
 
-    <!-- Détection eau -->
     <div class="proj-card reveal d3" style="--card-a:#10b981;--card-b:#06b6d4">
       <span class="proj-badge b-acad">Machine Learning</span>
-      <h3 class="proj-title">Détection d'anomalies — Qualité de l'eau</h3>
-      <p class="proj-desc">Détection non supervisée (Isolation Forest, LOF, One-Class SVM) et supervisée (XGBoost, Random Forest) avec SMOTE.</p>
+      <h3 class="proj-title" id="p3-title">Détection d'anomalies — Qualité de l'eau</h3>
+      <p class="proj-desc" id="p3-desc">Détection non supervisée (Isolation Forest, LOF, One-Class SVM) et supervisée (XGBoost, Random Forest) avec SMOTE.</p>
       <div class="proj-tech">
         <span class="t tg">Scikit-learn</span><span class="t tg">XGBoost</span><span class="t tg">SMOTE</span><span class="t tg">Gradio</span>
       </div>
@@ -474,11 +525,10 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
       </div>
     </div>
 
-    <!-- Dashboard BI WIDE -->
     <div class="proj-card wide reveal d4" style="--card-a:#10b981;--card-b:#3b82f6">
-      <span class="proj-badge b-stage">Stage Pro · Juil–Août 2025</span>
-      <h3 class="proj-title">Dashboard BI & Module OCR Avancé — UNICASPORT</h3>
-      <p class="proj-desc">Application web intégrée : tableau de bord Business Intelligence avec KPI interactifs depuis Excel, couplé à un module OCR pour l'extraction automatique de texte et de tableaux depuis PDF et images.</p>
+      <span class="proj-badge b-stage" id="p4-badge">Stage Pro · Juil–Août 2025</span>
+      <h3 class="proj-title" id="p4-title">Dashboard BI & Module OCR Avancé — UNICASPORT</h3>
+      <p class="proj-desc" id="p4-desc">Application web intégrée : tableau de bord Business Intelligence avec KPI interactifs depuis Excel, couplé à un module OCR pour l'extraction automatique de texte et de tableaux depuis PDF et images.</p>
       <div class="proj-tech">
         <span class="t tg">Power BI</span><span class="t tg">OCR</span><span class="t tg">Python</span><span class="t tg">Excel / KPI</span><span class="t tg">API REST</span>
       </div>
@@ -488,11 +538,10 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
       </div>
     </div>
 
-    <!-- Lunettes IA -->
     <div class="proj-card reveal d5" style="--card-a:#a78bfa;--card-b:#ec4899">
       <span class="proj-badge b-acad">Vision par ordinateur</span>
-      <h3 class="proj-title">Essai Virtuel de Lunettes avec IA</h3>
-      <p class="proj-desc">Détection faciale temps réel pour l'essai virtuel de lunettes avec localisation des points clés du visage.</p>
+      <h3 class="proj-title" id="p5-title">Essai Virtuel de Lunettes avec IA</h3>
+      <p class="proj-desc" id="p5-desc">Détection faciale temps réel pour l'essai virtuel de lunettes avec localisation des points clés du visage.</p>
       <div class="proj-tech">
         <span class="t tv">OpenCV</span><span class="t tv">TensorFlow</span><span class="t tv">JavaFX</span><span class="t tv">Java</span>
       </div>
@@ -502,11 +551,10 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
       </div>
     </div>
 
-    <!-- SafeNow -->
     <div class="proj-card reveal d6" style="--card-a:#ec4899;--card-b:#f43f5e">
       <span class="proj-badge b-mob">Android</span>
-      <h3 class="proj-title">SafeNow — App SOS d'urgence</h3>
-      <p class="proj-desc">Application Android native SOS avec envoi GPS automatique, gestion de contacts d'urgence et notifications SMS intelligentes.</p>
+      <h3 class="proj-title" id="p6-title">SafeNow — App SOS d'urgence</h3>
+      <p class="proj-desc" id="p6-desc">Application Android native SOS avec envoi GPS automatique, gestion de contacts d'urgence et notifications SMS intelligentes.</p>
       <div class="proj-tech">
         <span class="t tp">Java</span><span class="t tp">SQLite</span><span class="t tp">Room</span><span class="t tp">GPS API</span>
       </div>
@@ -516,11 +564,10 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
       </div>
     </div>
 
-    <!-- Plateforme portfolios -->
     <div class="proj-card reveal d1" style="--card-a:#3b82f6;--card-b:#6366f1">
-      <span class="proj-badge b-web">Stage Pro · 2024</span>
-      <h3 class="proj-title">Plateforme de Création de Portfolios & CVs</h3>
-      <p class="proj-desc">Site web complet dédié à la création de portfolios, CVs et cartes de visite numériques. Stage de fin d'études à WEBEX Agency.</p>
+      <span class="proj-badge b-web" id="p7-badge">Stage Pro · 2024</span>
+      <h3 class="proj-title" id="p7-title">Plateforme de Création de Portfolios & CVs</h3>
+      <p class="proj-desc" id="p7-desc">Site web complet dédié à la création de portfolios, CVs et cartes de visite numériques. Stage de fin d'études à WEBEX Agency.</p>
       <div class="proj-tech">
         <span class="t tb">Laravel</span><span class="t tb">HTML5/CSS3</span><span class="t tb">JavaScript</span><span class="t tb">MySQL</span>
       </div>
@@ -536,57 +583,57 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
 <!-- EXPERIENCE -->
 <section id="experience" class="sec">
   <div class="reveal">
-    <span class="sec-tag">Parcours professionnel</span>
-    <h2 class="sec-title">Expériences & <em>Stages</em></h2>
+    <span class="sec-tag" id="exp-tag">Parcours professionnel</span>
+    <h2 class="sec-title" id="exp-title">Expériences & <em>Stages</em></h2>
   </div>
   <div class="exp-wrap">
     <div class="tl reveal d1">
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-date">Juillet – Août 2025</div>
-        <div class="tl-role">Développement Web BI & OCR</div>
+        <div class="tl-role" id="exp1-role">Développement Web BI & OCR</div>
         <div class="tl-co">UNICASPORT, Casablanca</div>
-        <div class="tl-desc">Application web intégrée combinant dashboard BI et module OCR avancé. Analyse automatique de données Excel (KPI) et extraction depuis PDF/images.</div>
+        <div class="tl-desc" id="exp1-desc">Application web intégrée combinant dashboard BI et module OCR avancé. Analyse automatique de données Excel (KPI) et extraction depuis PDF/images.</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot" style="background:var(--g);box-shadow:0 0 0 3px rgba(16,185,129,0.2),0 0 12px rgba(16,185,129,0.4)"></div>
         <div class="tl-date">2024</div>
-        <div class="tl-role">Développement Web</div>
+        <div class="tl-role" id="exp2-role">Développement Web</div>
         <div class="tl-co">WEBEXAG, Casablanca</div>
-        <div class="tl-desc">Plateforme de création de portfolios, CVs et cartes de visite (Laravel, HTML/CSS).</div>
+        <div class="tl-desc" id="exp2-desc">Plateforme de création de portfolios, CVs et cartes de visite (Laravel, HTML/CSS).</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot" style="background:var(--o);box-shadow:0 0 0 3px rgba(245,158,11,0.2),0 0 12px rgba(245,158,11,0.4)"></div>
         <div class="tl-date">2023</div>
-        <div class="tl-role">Développement Mobile</div>
+        <div class="tl-role" id="exp3-role">Développement Mobile</div>
         <div class="tl-co">DÉVELOPPEUR INFORMATIQUE.MA, Agadir</div>
-        <div class="tl-desc">Application mobile cross-platform responsive avec Flutter/Dart.</div>
+        <div class="tl-desc" id="exp3-desc">Application mobile cross-platform responsive avec Flutter/Dart.</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot" style="background:var(--p);box-shadow:0 0 0 3px rgba(236,72,153,0.2),0 0 12px rgba(236,72,153,0.4)"></div>
         <div class="tl-date">2022</div>
-        <div class="tl-role">Application Android</div>
+        <div class="tl-role" id="exp4-role">Application Android</div>
         <div class="tl-co">SUPTECHNIQUE S.A.R.L, Agadir</div>
-        <div class="tl-desc">Application mobile Android native en Java avec base de données MySQL.</div>
+        <div class="tl-desc" id="exp4-desc">Application mobile Android native en Java avec base de données MySQL.</div>
       </div>
     </div>
     <div class="side-block reveal d2">
       <div>
-        <div class="side-title">Langues</div>
+        <div class="side-title" id="lang-section-title">Langues</div>
         <div class="lang-row">
-          <div class="lang-pill"><div class="lang-n">Arabe</div><div class="lang-l">Maternelle</div></div>
-          <div class="lang-pill"><div class="lang-n">Français</div><div class="lang-l">Bon niveau</div></div>
-          <div class="lang-pill"><div class="lang-n">Anglais</div><div class="lang-l">Intermédiaire</div></div>
+          <div class="lang-pill"><div class="lang-n">Arabe</div><div class="lang-l" id="lang1-level">Maternelle</div></div>
+          <div class="lang-pill"><div class="lang-n">Français</div><div class="lang-l" id="lang2-level">Bon niveau</div></div>
+          <div class="lang-pill"><div class="lang-n">Anglais</div><div class="lang-l" id="lang3-level">Intermédiaire</div></div>
         </div>
       </div>
       <div>
-        <div class="side-title">Atouts clés</div>
+        <div class="side-title" id="soft-title">Atouts clés</div>
         <div class="soft-list">
-          <div class="soft-item"><div class="soft-dot"></div>Projets menés de bout en bout</div>
-          <div class="soft-item"><div class="soft-dot" style="background:var(--v2)"></div>Esprit analytique, orienté résultats</div>
-          <div class="soft-item"><div class="soft-dot" style="background:var(--o2)"></div>Travail en équipe (Hackathon)</div>
-          <div class="soft-item"><div class="soft-dot" style="background:var(--p)"></div>Veille IA / LLM active</div>
-          <div class="soft-item"><div class="soft-dot" style="background:var(--b)"></div>Adaptabilité rapide</div>
+          <div class="soft-item"><div class="soft-dot"></div><span id="soft1">Projets menés de bout en bout</span></div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--v2)"></div><span id="soft2">Esprit analytique, orienté résultats</span></div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--o2)"></div><span id="soft3">Travail en équipe (Hackathon)</span></div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--p)"></div><span id="soft4">Veille IA / LLM active</span></div>
+          <div class="soft-item"><div class="soft-dot" style="background:var(--b)"></div><span id="soft5">Adaptabilité rapide</span></div>
         </div>
       </div>
     </div>
@@ -598,7 +645,7 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
   <div class="ft-inner">
     <div class="ft-left">
       <div class="ft-name">Aderdour Najat</div>
-      <div class="ft-sub">Data Science · Big Data · Intelligence Artificielle</div>
+      <div class="ft-sub" id="ft-sub">Data Science · Big Data · Intelligence Artificielle</div>
     </div>
     <div class="ft-center">
       <div class="ft-socials">
@@ -625,12 +672,12 @@ footer{border-top:1px solid var(--border);padding:3rem 4rem 2rem;background:var(
     </div>
   </div>
   <div class="ft-bottom">
-    <div class="ft-copy">© 2026 Aderdour Najat · Portfolio personnel</div>
+    <div class="ft-copy" id="ft-copy">© 2026 Aderdour Najat · Portfolio personnel</div>
   </div>
 </footer>
 
 <script>
-// Custom cursor
+// ── CURSOR ──
 const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 let mx=0,my=0,rx=0,ry=0;
@@ -657,7 +704,7 @@ document.querySelectorAll('a,button,.proj-card,.sk-card').forEach(el=>{
   });
 });
 
-// Skill card mouse glow
+// ── SKILL CARD GLOW ──
 document.querySelectorAll('.sk-card').forEach(card=>{
   card.addEventListener('mousemove',e=>{
     const r=card.getBoundingClientRect();
@@ -666,29 +713,231 @@ document.querySelectorAll('.sk-card').forEach(card=>{
   });
 });
 
-// Scroll reveal
+// ── SCROLL REVEAL ──
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
 },{threshold:0.08});
 document.querySelectorAll('.reveal,.reveal-l').forEach(el=>obs.observe(el));
 
-// Nav scroll
+// ── NAV SCROLL ──
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
 });
 
-// Nav active
+// ── NAV ACTIVE ──
 const secs=document.querySelectorAll('section[id]');
 const nls=document.querySelectorAll('.nav-links a');
 window.addEventListener('scroll',()=>{
-  let cur='';
-  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-180)cur=s.id;});
+  let cur2='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-180)cur2=s.id;});
   nls.forEach(a=>{
-    const active=a.getAttribute('href')==='#'+cur;
+    const active=a.getAttribute('href')==='#'+cur2;
     a.style.color=active?'var(--text2)':'';
-    a.querySelector('::after');
   });
 });
+
+// ── CV MODAL ──
+function openCvModal(){
+  document.getElementById('cv-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeCvModal(){
+  document.getElementById('cv-modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('cv-close-btn').addEventListener('click', closeCvModal);
+document.getElementById('cv-backdrop').addEventListener('click', closeCvModal);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCvModal(); });
+
+// ── LANG SWITCH ──
+const translations = {
+  fr: {
+    'nav-cta-contact': 'Me contacter',
+    'hero-sub': 'Étudiante Ingénieure — <span>ENSIASD Taroudant</span>',
+    'hero-tagline': 'Je construis des systèmes intelligents qui transforment la donnée en impact réel — de la détection d\'anomalies aux agents IA agentiques.',
+    'btn-projects-label': 'Voir mes projets',
+    'btn-cv-label': 'Voir mon CV',
+    'metric1': 'Projets IA/Data',
+    'metric2': 'Stages Pro',
+    'metric3': 'Hackathon IA Agentique',
+    'metric4': 'Langues',
+    'about-tag': 'Qui suis-je',
+    'about-title': 'Ingénieure <em>Data & IA</em>',
+    'about-p1': 'Passionnée par l\'<strong>intelligence artificielle</strong> et les sciences des données, je suis actuellement en cycle ingénieur à l\'<strong>ENSIASD de Taroudant</strong>, filière Sciences des Données, Big Data & IA (2024–2026).',
+    'about-p2': 'Je suis motivée par les problèmes à fort impact, les hackathons, et la création de solutions qui allient <strong>robustesse technique</strong> et <strong>utilité réelle</strong>.',
+    'edu1-deg': 'Cycle Ingénieur — Sciences des Données, Big Data & IA',
+    'edu2-deg': 'Licence Pro — Ingénierie des Systèmes Informatiques et Logiciels',
+    'edu3-deg': 'DUT — Génie Informatique',
+    'skills-tag': 'Expertise technique',
+    'skills-title': 'Ce que je <em>maîtrise</em>',
+    'skills-desc': 'Un éventail complet couvrant l\'ensemble du pipeline Data & AI.',
+    'sk1-small': 'Intelligence artificielle & deep learning',
+    'sk2-small': 'Programmation & scripting',
+    'sk3-small': 'Analyse & visualisation',
+    'sk4-small': 'Infrastructure & traitement massif',
+    'sk5-small': 'Développement full-stack',
+    'sk6-small': 'Gestion des données & workflows',
+    'projects-tag': 'Réalisations',
+    'projects-title': 'Projets <em>sélectionnés</em>',
+    'projects-desc': 'Académiques, professionnels et hackathon — des solutions à fort impact.',
+    'p1-badge': '🏆 Hackathon IA Agentique',
+    'p1-win': '🥉 3ème place — Avril 2026',
+    'p1-title-sub': 'Système d\'agents IA pour la gestion de stocks',
+    'p1-desc': 'Développé lors du "The 24 Build-Off IA Agentique" avec l\'Équipe Innovia. Système multi-agents pour l\'automatisation intelligente de la gestion de stocks : prédiction de rupture, réapprovisionnement automatique, tableau de bord temps réel et interface pilotée par LLM.',
+    'p1-date': 'Avril 2026 · Équipe Innovia',
+    'p2-title': 'Image Captioning CNN + LSTM & Transformer',
+    'p2-desc': 'Génération automatique de légendes d\'images sur Flickr8k. Architecture ResNet-50 + LSTM / Transformer.',
+    'p3-title': 'Détection d\'anomalies — Qualité de l\'eau',
+    'p3-desc': 'Détection non supervisée (Isolation Forest, LOF, One-Class SVM) et supervisée (XGBoost, Random Forest) avec SMOTE.',
+    'p4-badge': 'Stage Pro · Juil–Août 2025',
+    'p4-title': 'Dashboard BI & Module OCR Avancé — UNICASPORT',
+    'p4-desc': 'Application web intégrée : tableau de bord Business Intelligence avec KPI interactifs depuis Excel, couplé à un module OCR pour l\'extraction automatique de texte et de tableaux depuis PDF et images.',
+    'p5-title': 'Essai Virtuel de Lunettes avec IA',
+    'p5-desc': 'Détection faciale temps réel pour l\'essai virtuel de lunettes avec localisation des points clés du visage.',
+    'p6-title': 'SafeNow — App SOS d\'urgence',
+    'p6-desc': 'Application Android native SOS avec envoi GPS automatique, gestion de contacts d\'urgence et notifications SMS intelligentes.',
+    'p7-badge': 'Stage Pro · 2024',
+    'p7-title': 'Plateforme de Création de Portfolios & CVs',
+    'p7-desc': 'Site web complet dédié à la création de portfolios, CVs et cartes de visite numériques. Stage de fin d\'études à WEBEX Agency.',
+    'exp-tag': 'Parcours professionnel',
+    'exp-title': 'Expériences & <em>Stages</em>',
+    'exp1-role': 'Développement Web BI & OCR',
+    'exp1-desc': 'Application web intégrée combinant dashboard BI et module OCR avancé. Analyse automatique de données Excel (KPI) et extraction depuis PDF/images.',
+    'exp2-role': 'Développement Web',
+    'exp2-desc': 'Plateforme de création de portfolios, CVs et cartes de visite (Laravel, HTML/CSS).',
+    'exp3-role': 'Développement Mobile',
+    'exp3-desc': 'Application mobile cross-platform responsive avec Flutter/Dart.',
+    'exp4-role': 'Application Android',
+    'exp4-desc': 'Application mobile Android native en Java avec base de données MySQL.',
+    'lang-section-title': 'Langues',
+    'lang1-level': 'Maternelle',
+    'lang2-level': 'Bon niveau',
+    'lang3-level': 'Intermédiaire',
+    'soft-title': 'Atouts clés',
+    'soft1': 'Projets menés de bout en bout',
+    'soft2': 'Esprit analytique, orienté résultats',
+    'soft3': 'Travail en équipe (Hackathon)',
+    'soft4': 'Veille IA / LLM active',
+    'soft5': 'Adaptabilité rapide',
+    'ft-sub': 'Data Science · Big Data · Intelligence Artificielle',
+    'ft-copy': '© 2026 Aderdour Najat · Portfolio personnel',
+    'cv-modal-title': 'Curriculum Vitae',
+    'cv-dl-label': 'Télécharger',
+    'nav-about': 'Profil',
+    'nav-skills': 'Compétences',
+    'nav-projects': 'Projets',
+    'nav-exp': 'Expérience',
+  },
+  en: {
+    'nav-cta-contact': 'Contact me',
+    'hero-sub': 'Engineering Student — <span>ENSIASD Taroudant</span>',
+    'hero-tagline': 'I build intelligent systems that turn data into real impact — from anomaly detection to agentic AI agents.',
+    'btn-projects-label': 'View my projects',
+    'btn-cv-label': 'View my CV',
+    'metric1': 'AI/Data Projects',
+    'metric2': 'Internships',
+    'metric3': 'Agentic AI Hackathon',
+    'metric4': 'Languages',
+    'about-tag': 'About me',
+    'about-title': 'Data & AI <em>Engineer</em>',
+    'about-p1': 'Passionate about <strong>artificial intelligence</strong> and data science, I am currently enrolled in an engineering program at <strong>ENSIASD Taroudant</strong>, specializing in Data Science, Big Data & AI (2024–2026).',
+    'about-p2': 'I am driven by high-impact problems, hackathons, and building solutions that combine <strong>technical robustness</strong> with <strong>real-world utility</strong>.',
+    'edu1-deg': 'Engineering Degree — Data Science, Big Data & AI',
+    'edu2-deg': 'Professional Bachelor — IT Systems Engineering',
+    'edu3-deg': 'DUT — Computer Engineering',
+    'skills-tag': 'Technical expertise',
+    'skills-title': 'What I <em>master</em>',
+    'skills-desc': 'A full stack covering the entire Data & AI pipeline.',
+    'sk1-small': 'Artificial intelligence & deep learning',
+    'sk2-small': 'Programming & scripting',
+    'sk3-small': 'Analytics & visualization',
+    'sk4-small': 'Infrastructure & large-scale processing',
+    'sk5-small': 'Full-stack development',
+    'sk6-small': 'Data management & workflows',
+    'projects-tag': 'Work',
+    'projects-title': '<em>Selected</em> projects',
+    'projects-desc': 'Academic, professional & hackathon — high-impact solutions.',
+    'p1-badge': '🏆 Agentic AI Hackathon',
+    'p1-win': '🥉 3rd place — April 2026',
+    'p1-title-sub': 'Multi-agent AI system for inventory management',
+    'p1-desc': 'Built during "The 24 Build-Off Agentic AI" with Team Innovia. Multi-agent system for intelligent stock management automation: rupture prediction, auto-replenishment, real-time dashboard, and LLM-driven interface.',
+    'p1-date': 'April 2026 · Team Innovia',
+    'p2-title': 'Image Captioning CNN + LSTM & Transformer',
+    'p2-desc': 'Automatic image caption generation on Flickr8k. ResNet-50 + LSTM / Transformer architecture.',
+    'p3-title': 'Anomaly Detection — Water Quality',
+    'p3-desc': 'Unsupervised detection (Isolation Forest, LOF, One-Class SVM) and supervised (XGBoost, Random Forest) with SMOTE.',
+    'p4-badge': 'Internship · Jul–Aug 2025',
+    'p4-title': 'BI Dashboard & Advanced OCR Module — UNICASPORT',
+    'p4-desc': 'Integrated web app: Business Intelligence dashboard with interactive KPIs from Excel, paired with an OCR module for automatic text and table extraction from PDFs and images.',
+    'p5-title': 'Virtual AI Glasses Try-On',
+    'p5-desc': 'Real-time face detection for virtual glasses try-on with facial keypoint localization.',
+    'p6-title': 'SafeNow — Emergency SOS App',
+    'p6-desc': 'Native Android SOS app with automatic GPS sending, emergency contact management, and smart SMS notifications.',
+    'p7-badge': 'Internship · 2024',
+    'p7-title': 'Portfolio & CV Creation Platform',
+    'p7-desc': 'Full website for creating digital portfolios, CVs and business cards. End-of-study internship at WEBEX Agency.',
+    'exp-tag': 'Professional background',
+    'exp-title': 'Experience & <em>Internships</em>',
+    'exp1-role': 'Web BI & OCR Development',
+    'exp1-desc': 'Integrated web app combining BI dashboard and advanced OCR module. Automatic Excel data analysis (KPIs) and extraction from PDF/images.',
+    'exp2-role': 'Web Development',
+    'exp2-desc': 'Portfolio, CV and business card creation platform (Laravel, HTML/CSS).',
+    'exp3-role': 'Mobile Development',
+    'exp3-desc': 'Responsive cross-platform mobile app with Flutter/Dart.',
+    'exp4-role': 'Android Application',
+    'exp4-desc': 'Native Android mobile application in Java with MySQL database.',
+    'lang-section-title': 'Languages',
+    'lang1-level': 'Native',
+    'lang2-level': 'Good level',
+    'lang3-level': 'Intermediate',
+    'soft-title': 'Key strengths',
+    'soft1': 'End-to-end project delivery',
+    'soft2': 'Analytical mindset, results-driven',
+    'soft3': 'Team collaboration (Hackathon)',
+    'soft4': 'Active AI / LLM watch',
+    'soft5': 'Fast adaptability',
+    'ft-sub': 'Data Science · Big Data · Artificial Intelligence',
+    'ft-copy': '© 2026 Aderdour Najat · Personal portfolio',
+    'cv-modal-title': 'Curriculum Vitae',
+    'cv-dl-label': 'Download',
+    'nav-about': 'Profile',
+    'nav-skills': 'Skills',
+    'nav-projects': 'Projects',
+    'nav-exp': 'Experience',
+  }
+};
+
+let currentLang = 'fr';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+
+  // Toggle buttons
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+  // Update html lang attribute
+  document.documentElement.lang = lang;
+
+  // Update all translated elements
+  for (const [id, val] of Object.entries(t)) {
+    if (id.startsWith('nav-') && id !== 'nav-cta-contact' && id !== 'nav-about' && id !== 'nav-skills' && id !== 'nav-projects' && id !== 'nav-exp') {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = val;
+      continue;
+    }
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  }
+
+  // Nav links
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const keys = ['nav-about', 'nav-skills', 'nav-projects', 'nav-exp'];
+  navLinks.forEach((a, i) => {
+    if (keys[i] && t[keys[i]]) a.textContent = t[keys[i]];
+  });
+}
 </script>
 </body>
 </html>
